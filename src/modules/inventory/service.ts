@@ -15,3 +15,7 @@ export function reserve(sku: string, qty: number): ReserveResult {
 export function onHand(sku: string): number {
   return stock().get(sku)?.onHand ?? 0;
 }
+
+export function hasSku(sku: string): boolean {
+  return stock().has(sku);
+}
