@@ -1,4 +1,4 @@
-import { send } from "../notifications/service.ts";
+import { events } from "../../platform/event-bus.ts";
 import { reserve ,hasSku} from "../inventory/index.ts";
 import { charge } from "../payments/index.ts";
 import { orders, type Order } from "./repo.ts";
@@ -29,7 +29,11 @@ if (!hasSku(sku)) return { ok: false, reason: "unknown_sku" };
   const id = `ord_${++n}`;
   orders().set(id, { id, sku, qty, amountPaise, chargeId: c.chargeId });
 
-  send(email, `Order ${id} confirmed`);
+  events.publish("order.placed", {
+  orderId: id,
+  email,
+  amountPaise,
+});
 
   return { ok: true, orderId: id, amountPaise };
 }

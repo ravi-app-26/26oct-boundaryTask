@@ -1,5 +1,5 @@
 import { outbox, type Message } from "./repo.ts";
-
+import { events } from "../../platform/event-bus.ts";
 let n = 0;
 
 export function send(to: string, subject: string): string {
@@ -11,3 +11,7 @@ export function send(to: string, subject: string): string {
 export function sent(): Message[] {
   return [...outbox().values()];
 }
+
+events.subscribe("order.placed", ({ orderId, email }) => {
+  send(email, `Order ${orderId} confirmed`);
+});
